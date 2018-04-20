@@ -3,13 +3,28 @@ import { Request, Router } from "express"
 
 export interface UploadEngineConfiguration {
   manager: UploadEngineManager
-  urlPrefix?: string
+  /**
+   * The base URL (optional).
+   *
+   * Must start with a leading `/` and not have a trailing `/`. Example: `/medias`.
+   */
+  baseUrl?: string
   storage: MediaStorage
+}
+
+export interface DeclareRoutesOptions {
+  /**
+   * Override the option `baseUrl` from `UploadEngineConfiguration` (optional).
+   *
+   * Must start with a leading `/` and not have a trailing `/`. Or can be an empty string.
+   * Example: `/medias`.
+   */
+  baseUrl?: string
 }
 
 export interface UploadEngine {
   readonly storage: MediaStorage
-  declareRoutes(router: Router, ignoreUrlPrefix?: boolean): void
+  declareRoutes(router: Router, options?: DeclareRoutesOptions): void
   getFileUrl(media: Media, variant: Variant): string
 }
 

@@ -7,5 +7,5 @@ export interface UploadEngineContext {
   /**
    * Can be an empty string
    */
-  urlPrefix: string
+  baseUrl: string
 }

@@ -1,6 +1,6 @@
 {
   "name": "@fabtom/media-engine",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A backend library to upload and store files in SQLite, then to serve them",
   "main": "storage.js",
   "types": "storage.d.ts",

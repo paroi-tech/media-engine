@@ -3,18 +3,19 @@ import { Request, Response, Router } from "express"
 import { writeServerError, writeJsonResponse, writeError, getMulterParameterAsJson, getUploadMetaValue, getRouteParameter, waitForRequestBodyAsJson } from "./utils"
 import { UploadEngineContext } from "./internal-definitions"
 import { ExternalRef } from "../mediaStorage"
+import { DeclareRoutesOptions } from "./exported-definitions"
 
-export function declareRoutes(cx: UploadEngineContext, router: Router, ignoreUrlPrefix = false) {
+export function declareRoutes(cx: UploadEngineContext, router: Router, options: DeclareRoutesOptions) {
   let upload = multer({
     storage: multer.memoryStorage(),
     limits: {
       fileSize: 1024 * 1024 * 20 // 20 MB
     }
   })
-  let urlPrefix = ignoreUrlPrefix ? "" : cx.urlPrefix
-  router.post(`${urlPrefix}/medias`, upload.single("f"), makeUploadRouteHandler(cx))
-  router.delete(`${urlPrefix}/medias`, makeDeleteRouteHandler(cx))
-  router.get(`${urlPrefix}/medias/:year/:variantId/:fileName`, makeGetRouteHandler(cx))
+  let baseUrl = options.baseUrl === undefined ? cx.baseUrl : options.baseUrl
+  router.post(baseUrl, upload.single("f"), makeUploadRouteHandler(cx))
+  router.delete(baseUrl, makeDeleteRouteHandler(cx))
+  router.get(`${baseUrl}/:year/:variantId/:fileName`, makeGetRouteHandler(cx))
 }
 
 function makeUploadRouteHandler(cx: UploadEngineContext) {

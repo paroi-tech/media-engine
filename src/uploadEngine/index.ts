@@ -8,16 +8,16 @@ export function createUploadEngine(conf: UploadEngineConfiguration): UploadEngin
   let cx: UploadEngineContext = {
     manager: conf.manager,
     storage: conf.storage,
-    urlPrefix: conf.urlPrefix || ""
+    baseUrl: conf.baseUrl || ""
   }
   return {
     get storage() {
       return conf.storage
     },
-    declareRoutes: (router: Router, ignoreUrlPrefix = false) => declareRoutes(cx, router, ignoreUrlPrefix),
+    declareRoutes: (router: Router, options = {}) => declareRoutes(cx, router, options),
     getFileUrl: (media: Media, variant: Variant) => {
       let year = new Date(media.ts).getFullYear()
-      return `${cx.urlPrefix}/medias/${year}/${variant.id}/${encodeURIComponent(variant.fileName)}`
+      return `${cx.baseUrl}/${year}/${variant.id}/${encodeURIComponent(variant.fileName)}`
     }
   }
 }
