@@ -1,0 +1,6 @@
+node_modules
+/build/compiled
+/storage.d.ts
+/storage.js
+/upload.d.ts
+/upload.js
