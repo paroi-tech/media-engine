@@ -1,6 +1,6 @@
 {
   "name": "@fabtom/media-engine",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A backend library to upload and store files in SQLite, then to serve them",
   "main": "storage.js",
   "types": "storage.d.ts",
@@ -38,9 +38,13 @@
   },
   "license": "CC0-1.0",
   "keywords": [
-    "monkberry",
-    "library",
-    "template",
-    "engine"
+    "media",
+    "engine",
+    "storage",
+    "database",
+    "upload",
+    "files",
+    "resize",
+    "images"
   ]
 }
