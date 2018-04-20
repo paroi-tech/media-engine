@@ -25,8 +25,8 @@ async function build() {
   await buildJs(path.join(compiledPath, "mediaStorage", "index.js"), `${bundleName1}.js`)
   await buildJs(path.join(compiledPath, "uploadEngine", "index.js"), `${bundleName2}.js`)
 
-  await writeFile(path.join(distNpmPath, `${bundleName1}.d.ts`), await makeDefinitionsCode("mediaStorage", bundleName1))
-  await writeFile(path.join(distNpmPath, `${bundleName2}.d.ts`), await makeDefinitionsCode("uploadEngine", bundleName2))
+  await writeFile(path.join(distNpmPath, `${bundleName1}.d.ts`), await makeDefinitionsCode("mediaStorage"))
+  await writeFile(path.join(distNpmPath, `${bundleName2}.d.ts`), await makeDefinitionsCode("uploadEngine"))
 }
 
 async function buildJs(srcDir, outputFile) {
@@ -43,16 +43,14 @@ async function buildJs(srcDir, outputFile) {
   await writeFile(path.join(distNpmPath, outputFile), minified.code)
 }
 
-async function makeDefinitionsCode(subDirName, moduleName) {
+async function makeDefinitionsCode(subDirName) {
   let defs = [
-    //`declare module "./${moduleName}" {`,
     "// -- Usage definitions --",
     removeLocalImportsExports((await readFile(path.join(srcPath, subDirName, "exported-definitions.d.ts"), "utf-8")).trim()),
     "// -- Entry point definition --",
     removeSemicolons(
       removeLocalImportsExports((await readFile(path.join(compiledPath, subDirName, "index.d.ts"), "utf-8")).trim())
-    ),
-    //"}"
+    )
   ]
   let utilsFile = path.join(compiledPath, subDirName, "exported-utils.d.ts")
   if (await fileExists(utilsFile)) {
