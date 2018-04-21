@@ -1,6 +1,6 @@
 const multer = require("multer")
 import { Request, Response, Router } from "express"
-import { writeServerError, writeJsonResponse, writeError, getMulterParameterAsJson, getUploadMetaValue, getRouteParameter, waitForRequestBodyAsJson } from "./utils"
+import { writeServerError, writeJsonResponse, writeError, getMulterParameterAsJson, getUploadMetaValue, getRouteParameter, waitForRequestBodyAsJson, encodeRFC5987ValueChars } from "./utils"
 import { UploadEngineContext } from "./internal-definitions"
 import { ExternalRef } from "../mediaStorage"
 import { DeclareRoutesOptions } from "./exported-definitions"
@@ -82,7 +82,7 @@ async function returnFile(cx: UploadEngineContext, variantId: string, res: Respo
     res.type(fileData.imType)
     res.set("Content-Length", fileData.weightB.toString())
     if (asDownload)
-      res.set("Content-Disposition", `attachment;filename=${fileData.fileName}`)
+      res.set("Content-Disposition", `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(fileData.fileName)}`)
     res.write(fileData.binData)
   } else {
     res.status(404)

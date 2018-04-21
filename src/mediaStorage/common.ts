@@ -39,7 +39,6 @@ export function getFileName(options: FileNameOptions) {
   let n = [options.baseName, options.code].filter(tok => tok !== undefined).join("-")
   if (!n)
     n = options.originalName || "unamed"
-  // console.log(".................. >>> getFileName", `${n}${fileExt}`, options)
   return `${n}${fileExt}`
 }
 
