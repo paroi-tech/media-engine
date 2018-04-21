@@ -13,8 +13,8 @@ export function declareRoutes(cx: UploadEngineContext, router: Router, options: 
     }
   })
   let baseUrl = options.baseUrl === undefined ? cx.baseUrl : options.baseUrl
-  router.post(baseUrl, upload.single("f"), makeUploadRouteHandler(cx))
-  router.delete(baseUrl, makeDeleteRouteHandler(cx))
+  router.post(`${baseUrl}/upload`, upload.single("f"), makeUploadRouteHandler(cx))
+  router.post(`${baseUrl}/delete`, makeDeleteRouteHandler(cx))
   router.get(`${baseUrl}/:year/:variantId/:fileName`, makeGetRouteHandler(cx))
 }
 

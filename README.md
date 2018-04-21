@@ -54,6 +54,8 @@ Notice: The `MediaStorage` can be used without an `UploadEngine`.
 
 The `UploadEngine` declares and implements the routes to `express`.
 
+Here is how to create an `UploadEngine`:
+
 ```ts
 import { Request } from "express"
 import { ExternalRef, MediaRef, Media, MulterFile, MediaStorage, createMediaStorage, isSupportedImage } from "@fabtom/media-engine"
@@ -97,5 +99,37 @@ function createUploadEngineManager(storage: MediaStorage): UploadEngineManager {
       return { /* your JSON response */ }
     }
   }
+}
+```
+
+Then, let it declare the routes:
+
+```ts
+const express = require("express")
+
+let router = express.Router()
+uploadEngine.declareRoutes(router)
+
+let app = express()
+app.use(router)
+let server = http.createServer(app)
+server.listen(8080)
+```
+
+Now, three routes are available:
+
+* `url/to/medias/upload` (`POST`) Upload a file and create a media. A JSON object of type `UploadedFile` must be sent as a parameter with the file.
+* `url/to/medias/delete` (`POST`) Delete a media. A JSON object of type `{ mediaId: string }` must be sent as a request body.
+* `url/to/medias/:year/:variantId/:fileName?download=1` (`GET`) Serve a file. An optional URL parameter `download` can be set.
+
+The `UploadedFile` type:
+
+```ts
+interface UploadedFile {
+  ref {
+    type: string
+    id: string
+  }
+  overwrite?: boolean
 }
 ```
