@@ -8,7 +8,11 @@ import { isSupportedImage } from "./exported-utils"
 const SHARP_OUTPUT_TYPES = ["image/png", "image/jpeg", "image/webp"]
 
 export async function storeMedia(cx: MediaStorageContext, params: StoreMediaParameters): Promise<NewMedia> {
-  let transCn = await cx.cn.beginTransaction()
+  let transCn = await cx.mainCn.beginTransaction()
+  cx = {
+    ...cx,
+    cn: transCn
+  }
 
   try {
     let mediaId: string | undefined

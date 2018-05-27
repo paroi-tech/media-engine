@@ -1,9 +1,10 @@
-import { DatabaseConnectionWithSqlBricks } from "mycn-with-sql-bricks"
+import { QueryRunnerWithSqlBricks, DatabaseConnectionWithSqlBricks } from "mycn-with-sql-bricks"
 import { ImageVariantsConfiguration } from "./exported-definitions"
 
 export { SharpInstance, OutputInfo as SharpOutputInfo } from "sharp"
 
 export interface MediaStorageContext {
-  cn: DatabaseConnectionWithSqlBricks
+  cn: QueryRunnerWithSqlBricks
+  mainCn: DatabaseConnectionWithSqlBricks
   imagesConf: ImageVariantsConfiguration
 }

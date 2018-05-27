@@ -12,10 +12,7 @@ import { ImageVariantsConfiguration } from "@fabtom/media-engine"
 
 export async function createStorage(cn: DatabaseConnectionWithSqlBricks, execDdl: boolean) {
   return await createMediaStorage({
-    initDb: {
-      dbEngine: "sqlite",
-      execDdl
-    },
+    execInitScript: execDdl ? "sqlite" : undefined,
     cn,
     imagesConf: IMAGES_CONF
   })

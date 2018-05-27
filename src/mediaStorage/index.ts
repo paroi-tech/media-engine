@@ -8,10 +8,11 @@ import { removeMedia, removeMedias } from "./removeMedias"
 import { storeMedia } from "./storeMedia"
 
 export async function createMediaStorage(options: MediaStorageOptions): Promise<MediaStorage> {
-  if (options.initDb && options.initDb.execDdl)
-    await execDdl(options.initDb.dbEngine, options.cn)
+  if (options.execInitScript)
+    await execDdl(options.execInitScript, options.cn)
   let cx: MediaStorageContext = {
     cn: options.cn,
+    mainCn: options.cn,
     imagesConf: options.imagesConf || {}
   }
   return {
