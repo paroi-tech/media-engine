@@ -54,6 +54,8 @@ async function fetchVariantsOf(cx: MediaStorageContext, mediaId: string, baseNam
     sqlSelectVariant()
       .where("v.media_id", mediaId)
   )
+  if (rows.length === 0)
+    throw new Error(`Missing variants for media ${mediaId}`)
   let result: Variants = {}
   for (let row of rows) {
     let code = row["code"]

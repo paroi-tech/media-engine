@@ -1,26 +1,28 @@
 const multer = require("multer")
 import { Request, Response, Router } from "express"
 import { writeServerError, writeJsonResponse, writeError, getMulterParameterAsJson, getUploadMetaValue, getRouteParameter, waitForRequestBodyAsJson, encodeRFC5987ValueChars } from "./utils"
-import { UploadEngineContext } from "./internal-definitions"
+import { UploadEngineContext, GetCx } from "./internal-definitions"
 import { ExternalRef } from "../mediaStorage"
-import { DeclareRoutesOptions } from "./exported-definitions"
+import { DeclareRoutesMultiEngineOptions } from "./exported-definitions"
 
-export function declareRoutes(cx: UploadEngineContext, router: Router, options: DeclareRoutesOptions) {
+export function declareRoutes(router: Router, options: DeclareRoutesMultiEngineOptions, getCx: GetCx) {
   let upload = multer({
     storage: multer.memoryStorage(),
     limits: {
       fileSize: 1024 * 1024 * 20 // 20 MB
     }
   })
-  let baseUrl = options.baseUrl === undefined ? cx.baseUrl : options.baseUrl
-  router.post(`${baseUrl}/upload`, upload.single("f"), makeUploadRouteHandler(cx))
-  router.post(`${baseUrl}/delete`, makeDeleteRouteHandler(cx))
-  router.get(`${baseUrl}/:year/:variantId/:fileName`, makeGetRouteHandler(cx))
+  router.post(`${options.baseUrl}/upload`, upload.single("f"), makeUploadRouteHandler(getCx))
+  router.post(`${options.baseUrl}/delete`, makeDeleteRouteHandler(getCx))
+  router.get(`${options.baseUrl}/:year/:variantId/:fileName`, makeGetRouteHandler(getCx))
 }
 
-function makeUploadRouteHandler(cx: UploadEngineContext) {
+function makeUploadRouteHandler(getCx: GetCx) {
   return async function (req: Request, res: Response) {
     try {
+      let cx = await getCx(req, res)
+      if (!cx)
+        return
       // Check the parameters
       if (!req.file)
         return writeError(res, 400, "Missing file")
@@ -54,9 +56,12 @@ function makeUploadRouteHandler(cx: UploadEngineContext) {
   }
 }
 
-function makeGetRouteHandler(cx: UploadEngineContext) {
+function makeGetRouteHandler(getCx: GetCx) {
   return async function (req: Request, res: Response) {
     try {
+      let cx = await getCx(req, res)
+      if (!cx)
+        return
       // Check the parameters
       let variantId: string
       try {
@@ -91,10 +96,12 @@ async function returnFile(cx: UploadEngineContext, variantId: string, res: Respo
   res.end()
 }
 
-function makeDeleteRouteHandler(cx: UploadEngineContext) {
+function makeDeleteRouteHandler(getCx: GetCx) {
   return async function (req: Request, res: Response) {
     try {
-
+      let cx = await getCx(req, res)
+      if (!cx)
+        return
       // Check the parameters
       let mediaId: string
       try {
