@@ -2,9 +2,8 @@ import * as path from "path"
 import * as fs from "fs"
 import { promisify } from "util"
 import { DbEngine } from "./exported-definitions"
-import { DatabaseConnectionWithSqlBricks } from "mycn-with-sql-bricks"
 const readFile = promisify(fs.readFile)
 
-export async function execDdl(dbEngine: DbEngine, cn: DatabaseConnectionWithSqlBricks) {
+export async function execDdl(dbEngine: DbEngine, cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks) {
   await cn.execScript(await readFile(path.join(__dirname, "sql-scripts", `ddl-${dbEngine}.sql`), "utf8"))
 }

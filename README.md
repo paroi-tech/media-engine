@@ -7,10 +7,7 @@ A backend library to upload and store files in SQLite, then to serve them.
 The `MediaStorage` stores the files in a relational database. It resizes images in the configured dimensions.
 
 ```ts
-import { DatabaseConnectionWithSqlBricks } from "mycn-with-sql-bricks"
-import { ImageVariantsConfiguration } from "@fabtom/media-engine"
-
-export async function createStorage(cn: DatabaseConnectionWithSqlBricks, execDdl: boolean) {
+export async function createStorage(cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
   return await createMediaStorage({
     execInitScript: execDdl ? "sqlite" : undefined,
     cn,
@@ -18,7 +15,7 @@ export async function createStorage(cn: DatabaseConnectionWithSqlBricks, execDdl
   })
 }
 
-const IMAGES_CONF: ImageVariantsConfiguration = {
+const IMAGES_CONF: import("@fabtom/media-engine").ImageVariantsConfiguration = {
   "imageType1": [
     {
       code: "34x34",

@@ -1,10 +1,8 @@
-import { DatabaseConnectionWithSqlBricks } from "mycn-with-sql-bricks"
-
 export type DbEngine = "sqlite"
 
 export interface MediaStorageOptions {
   execInitScript?: DbEngine
-  cn: DatabaseConnectionWithSqlBricks
+  cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks
   imagesConf?: ImageVariantsConfiguration
 }
 
