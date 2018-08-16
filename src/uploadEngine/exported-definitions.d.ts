@@ -1,5 +1,4 @@
 import { ExternalRef, MulterFile, MediaRef, Media, Variant, MediaStorage } from "../mediaStorage"
-import { Request, Response, Router } from "express"
 
 export interface UploadEngineConfiguration {
   manager: UploadEngineManager
@@ -34,7 +33,7 @@ export interface DeclareRoutesMultiEngineOptions {
 
 export interface UploadEngine {
   readonly storage: MediaStorage
-  declareRoutes(router: Router, options?: DeclareRoutesOptions): void
+  declareRoutes(router: import("express").Router, options?: DeclareRoutesOptions): void
   getFileUrl(media: Media, variant: Variant): string
 }
 
@@ -49,16 +48,16 @@ export interface CanUpload {
 }
 
 export interface UploadEngineManager {
-  canUpload(req: Request, externalRef: ExternalRef, overwrite: boolean, file: MulterFile): Promise<CanUpload> | CanUpload
-  makeJsonResponseForUpload(req: Request, mediaId: string, overwritten: boolean): Promise<object> | object
+  canUpload(req: import("express").Request, externalRef: ExternalRef, overwrite: boolean, file: MulterFile): Promise<CanUpload> | CanUpload
+  makeJsonResponseForUpload(req: import("express").Request, mediaId: string, overwritten: boolean): Promise<object> | object
 
-  canRead(req: Request, mediaRef: MediaRef): Promise<boolean> | boolean
+  canRead(req: import("express").Request, mediaRef: MediaRef): Promise<boolean> | boolean
 
-  canDelete(req: Request, mediaRef: MediaRef): Promise<boolean> | boolean
-  makeJsonResponseForDelete(req: Request, deletedMedia: Media): Promise<object> | object
+  canDelete(req: import("express").Request, mediaRef: MediaRef): Promise<boolean> | boolean
+  makeJsonResponseForDelete(req: import("express").Request, deletedMedia: Media): Promise<object> | object
 }
 
 /**
  * @returns the `UploadEngine` or `undefined` if there isn't. This function must write a server response if it returns `undefined`.
  */
-export type GetUploadEngine = (req: Request, res: Response) => Promise<UploadEngine | undefined>
+export type GetUploadEngine = (req: import("express").Request, res: import("express").Response) => Promise<UploadEngine | undefined>

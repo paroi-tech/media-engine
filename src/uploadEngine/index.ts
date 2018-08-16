@@ -1,4 +1,3 @@
-import { Router } from "express"
 import { declareRoutes } from "./declareRoutes"
 import { UploadEngineContext } from "./internal-definitions"
 import { UploadEngineConfiguration, UploadEngine, DeclareRoutesMultiEngineOptions, GetUploadEngine } from "./exported-definitions"
@@ -16,7 +15,7 @@ export function createUploadEngine(conf: UploadEngineConfiguration): UploadEngin
     get storage() {
       return conf.storage
     },
-    declareRoutes: (router: Router, options = {}) => {
+    declareRoutes: (router, options = {}) => {
       let opt = {
         ...options,
         baseUrl: options.baseUrl === undefined ? cx.baseUrl : options.baseUrl
@@ -32,7 +31,7 @@ export function createUploadEngine(conf: UploadEngineConfiguration): UploadEngin
   return eng
 }
 
-export function declareRoutesMultiEngine(router: Router, options: DeclareRoutesMultiEngineOptions, getUploadEngine: GetUploadEngine) {
+export function declareRoutesMultiEngine(router: import("express").Router, options: DeclareRoutesMultiEngineOptions, getUploadEngine: GetUploadEngine) {
   declareRoutes(router, options, async (req, res) => {
     let eng = await getUploadEngine(req, res)
     return eng ? contexts.get(eng) : undefined
