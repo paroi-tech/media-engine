@@ -73,7 +73,7 @@ async function insertMedia(cx: MediaStorageContext, media: InsertMedia): Promise
       "orig_name": media.originalName,
       "owner_id": media.ownerId
     })
-  )).getInsertedIdString()
+  )).getInsertedIdAsString()
   if (media.externalRef) {
     await cx.cn.execSqlBricks(
       insertInto("media_ref").values({
@@ -119,7 +119,7 @@ async function insertVariant(cx: MediaStorageContext, variant: InsertVariant): P
       "code": variant.code,
       "bin_data": variant.binData
     })
-  )).getInsertedIdString()
+  )).getInsertedIdAsString()
   if (variant.img) {
     await cx.cn.execSqlBricks(
       insertInto("variant_img").values({
