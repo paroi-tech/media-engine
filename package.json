@@ -1,29 +1,30 @@
 {
   "name": "@fabtom/media-engine",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "A backend library to upload and store files in SQLite, then to serve them",
   "main": "storage.js",
   "types": "storage.d.ts",
   "dependencies": {
     "@types/multer": "^1.3.7",
-    "multer": "^1.3.1",
+    "multer": "^1.4.0",
     "sharp": "^0.20.8",
     "sql-bricks": "^2.0.3"
   },
   "peerDependencies": {
-    "mycn": "^0.14.0",
-    "mycn-with-sql-bricks": "^0.12.1"
+    "mycn": "^0.15.0",
+    "mycn-with-sql-bricks": "^0.13.0"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
     "@types/sharp": "^0.17.10",
     "@types/sql-bricks": "^2.0.1",
-    "mycn": "^0.14.0",
-    "mycn-with-sql-bricks": "^0.12.1",
+    "mycn": "^0.15.0",
+    "mycn-with-sql-bricks": "^0.13.0",
     "npm-run-all": "^4.1.3",
     "rimraf": "^2.6.2",
     "rollup": "^0.66.2",
-    "typescript": "^3.0.3",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.1",
     "uglify-es": "^3.3.9"
   },
   "scripts": {

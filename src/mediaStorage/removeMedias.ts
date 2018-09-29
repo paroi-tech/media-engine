@@ -1,35 +1,36 @@
-import { select, deleteFrom } from "sql-bricks"
-import { MediaOrVariantId, MediaFilter } from "./exported-definitions"
-import { MediaStorageContext } from "./internal-definitions"
+import { deleteFrom, select } from "sql-bricks"
 import { findMediaByExternalRef } from "./common"
+import { MediaFilter, MediaOrVariantId } from "./exported-definitions"
+import { MediaStorageContext } from "./internal-definitions"
+import { strVal } from "./utils"
 
 export async function removeMedia(cx: MediaStorageContext, id: MediaOrVariantId): Promise<boolean> {
   let mediaId: string
   if ("mediaId" in id)
     mediaId = id.mediaId
   else {
-    let foundMediaId = await cx.cn.singleValueSqlBricks(
+    let foundMediaId = await cx.cn.singleValue(
       select("media_id")
         .from("variant")
         .where("variant_id", id.variantId)
     )
     if (foundMediaId === undefined)
       return false
-    mediaId = foundMediaId.toString()
+    mediaId = strVal(foundMediaId)
   }
 
-  await cx.cn.execSqlBricks(
+  await cx.cn.exec(
     deleteFrom("variant").where("media_id", mediaId)
   )
-  let result = await cx.cn.execSqlBricks(
+  let result = await cx.cn.exec(
     deleteFrom("media").where("media_id", mediaId)
   )
   return result.affectedRows === 1
 }
 
-  /**
-   * @returns The deleted media identifiers (async)
-   */
+/**
+ * @returns The deleted media identifiers (async)
+ */
 export async function removeMedias(cx: MediaStorageContext, filter: MediaFilter): Promise<string[]> {
   if (!filter.externalRef)
     return []

@@ -1,5 +1,5 @@
 import { execDdl } from "./execDdl"
-import { MediaFilter, MediaOrVariantId, MediaQuery, StoreMediaParameters, MediaStorageOptions, MediaStorage } from "./exported-definitions"
+import { MediaFilter, MediaOrVariantId, MediaQuery, MediaStorage, MediaStorageOptions, StoreMediaParameters } from "./exported-definitions"
 import { findMediaRef } from "./findMediaRef"
 import { findMedia, findMedias } from "./findMedias"
 import { getFileData } from "./getFileData"
@@ -11,6 +11,8 @@ export async function createMediaStorage(options: MediaStorageOptions): Promise<
   if (options.execInitScript)
     await execDdl(options.execInitScript, options.cn)
   let cx: MediaStorageContext = {
+    // tslint:disable-next-line:no-console
+    logWarning: options.logWarning || (message => console.warn(message)),
     cn: options.cn,
     mainCn: options.cn,
     imagesConf: options.imagesConf || {}

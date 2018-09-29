@@ -1,9 +1,9 @@
 const multer = require("multer")
 import { Request, Response, Router } from "express"
-import { writeServerError, writeJsonResponse, writeError, getMulterParameterAsJson, getUploadMetaValue, getRouteParameter, waitForRequestBodyAsJson, encodeRFC5987ValueChars } from "./utils"
-import { UploadEngineContext, GetCx } from "./internal-definitions"
 import { ExternalRef } from "../mediaStorage"
 import { DeclareRoutesMultiEngineOptions } from "./exported-definitions"
+import { GetCx, UploadEngineContext } from "./internal-definitions"
+import { encodeRFC5987ValueChars, getMulterParameterAsJson, getRouteParameter, getUploadMetaValue, waitForRequestBodyAsJson, writeError, writeJsonResponse, writeServerError } from "./utils"
 
 export function declareRoutes(router: Router, options: DeclareRoutesMultiEngineOptions, getCx: GetCx) {
   let upload = multer({
@@ -46,7 +46,7 @@ function makeUploadRouteHandler(getCx: GetCx) {
       let { mediaId, overwritten } = await cx.storage.storeMedia({
         file: req.file,
         externalRef,
-        ownerId: ownerId,
+        ownerId,
         overwrite
       })
       writeJsonResponse(res, 200, await cx.manager.makeJsonResponseForUpload(req, mediaId, overwritten))

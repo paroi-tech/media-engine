@@ -4,6 +4,7 @@ export interface MediaStorageOptions {
   execInitScript?: DbEngine
   cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks
   imagesConf?: ImageVariantsConfiguration
+  logWarning?: (message: string) => void
 }
 
 export interface MediaStorage {

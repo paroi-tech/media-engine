@@ -1,9 +1,9 @@
-import { insertInto, update, deleteFrom } from "sql-bricks"
+import { deleteFrom, insertInto, update } from "sql-bricks"
 const sharp = require("sharp")
-import { MediaStorageContext, SharpOutputInfo, SharpInstance } from "./internal-definitions"
-import { StoreMediaParameters, NewMedia, MediaDef, VariantDef, MulterFile, ImageMeta, ImageVariantConfiguration } from "./exported-definitions"
-import { findMediaByExternalRef, fileBaseName } from "./common"
+import { fileBaseName, findMediaByExternalRef } from "./common"
+import { ImageMeta, ImageVariantConfiguration, MediaDef, MulterFile, NewMedia, StoreMediaParameters, VariantDef } from "./exported-definitions"
 import { isSupportedImage } from "./exported-utils"
+import { MediaStorageContext, SharpInstance, SharpOutputInfo } from "./internal-definitions"
 
 const SHARP_OUTPUT_TYPES = ["image/png", "image/jpeg", "image/webp"]
 
@@ -40,7 +40,7 @@ export async function storeMedia(cx: MediaStorageContext, params: StoreMediaPara
       }, mediaId)
     }
 
-    let imgMeta = await getImageMeta(params.file)
+    let imgMeta = await getImageMeta(cx, params.file)
 
     await insertVariant(cx, {
       mediaId,
@@ -67,7 +67,7 @@ export async function storeMedia(cx: MediaStorageContext, params: StoreMediaPara
 type InsertMedia = Pick<MediaDef, "baseName" | "originalName" | "ownerId" | "externalRef">
 
 async function insertMedia(cx: MediaStorageContext, media: InsertMedia): Promise<string> {
-  let mediaId = (await cx.cn.execSqlBricks(
+  let mediaId = (await cx.cn.exec(
     insertInto("media").values({
       "base_name": media.baseName,
       "orig_name": media.originalName,
@@ -75,7 +75,7 @@ async function insertMedia(cx: MediaStorageContext, media: InsertMedia): Promise
     })
   )).getInsertedIdAsString()
   if (media.externalRef) {
-    await cx.cn.execSqlBricks(
+    await cx.cn.exec(
       insertInto("media_ref").values({
         "media_id": mediaId,
         "external_type": media.externalRef.type,
@@ -87,7 +87,7 @@ async function insertMedia(cx: MediaStorageContext, media: InsertMedia): Promise
 }
 
 async function clearMediaVariants(cx: MediaStorageContext, mediaId: string) {
-  await cx.cn.execSqlBricks(
+  await cx.cn.exec(
     deleteFrom("variant").where("media_id", mediaId)
   )
 }
@@ -95,7 +95,7 @@ async function clearMediaVariants(cx: MediaStorageContext, mediaId: string) {
 type UpdateMedia = Pick<MediaDef, "baseName" | "originalName" | "ownerId">
 
 async function updateMedia(cx: MediaStorageContext, media: UpdateMedia, mediaId: string) {
-  await cx.cn.execSqlBricks(
+  await cx.cn.exec(
     update("media")
       .set({
         "base_name": media.baseName,
@@ -111,7 +111,7 @@ type InsertVariant = Pick<VariantDef, "code" | "imType" | "weightB" | "img" | "b
 }
 
 async function insertVariant(cx: MediaStorageContext, variant: InsertVariant): Promise<string> {
-  let variantId = (await cx.cn.execSqlBricks(
+  let variantId = (await cx.cn.exec(
     insertInto("variant").values({
       "media_id": variant.mediaId,
       "weight_b": variant.weightB,
@@ -121,7 +121,7 @@ async function insertVariant(cx: MediaStorageContext, variant: InsertVariant): P
     })
   )).getInsertedIdAsString()
   if (variant.img) {
-    await cx.cn.execSqlBricks(
+    await cx.cn.exec(
       insertInto("variant_img").values({
         "variant_id": variantId,
         "width": variant.img.width,
@@ -133,7 +133,7 @@ async function insertVariant(cx: MediaStorageContext, variant: InsertVariant): P
   return variantId
 }
 
-async function getImageMeta(f: MulterFile): Promise<ImageMeta | undefined> {
+async function getImageMeta(cx: MediaStorageContext, f: MulterFile): Promise<ImageMeta | undefined> {
   if (!isSupportedImage(f.mimetype))
     return
   try {
@@ -146,7 +146,7 @@ async function getImageMeta(f: MulterFile): Promise<ImageMeta | undefined> {
       }
     }
   } catch (err) {
-    console.log(`Cannot read the image meta (type ${f.mimetype}): ${err.message}`)
+    cx.logWarning(`Cannot read the image meta (type ${f.mimetype}): ${err.message}`)
   }
 }
 
@@ -170,7 +170,7 @@ async function resizeAndInsertVariant(cx: MediaStorageContext, mediaId: string, 
         resolveWithObject: true
       }))
   } catch (err) {
-    console.log(`[WARN] Cannot resize (${targetConf.embed ? "embed" : "crop"}) the image (type "${f.mimetype}"): ${err.message}`)
+    cx.logWarning(`[WARN] Cannot resize (${targetConf.embed ? "embed" : "crop"}) the image (type "${f.mimetype}"): ${err.message}`)
     return
   }
 

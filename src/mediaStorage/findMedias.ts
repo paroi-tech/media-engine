@@ -1,7 +1,8 @@
 import { select } from "sql-bricks"
-import { MediaStorageContext } from "./internal-definitions"
-import { MediaQuery, Media, Variants, Variant } from "./exported-definitions"
 import { getFileName } from "./common"
+import { Media, MediaQuery, Variant, Variants } from "./exported-definitions"
+import { MediaStorageContext } from "./internal-definitions"
+import { strVal } from "./utils"
 
 export async function findMedias(cx: MediaStorageContext, query: MediaQuery): Promise<Media[]> {
   let sb = sqlSelectMedia()
@@ -17,22 +18,22 @@ export async function findMedias(cx: MediaStorageContext, query: MediaQuery): Pr
     })
   } else
     return []
-  let rows = await cx.cn.allSqlBricks(sb)
+  let rows = await cx.cn.all(sb)
   let result: Media[] = []
   for (let row of rows) {
-    let id = row["media_id"].toString()
+    let id = strVal(row["media_id"])
     let externalRef = !row["external_type"] || !row["external_id"] ? undefined : {
-      type: row["external_type"],
-      id: row["external_id"]
+      type: row["external_type"] as string,
+      id: strVal(row["external_id"])
     }
     result.push({
       id,
-      ts: row["ts"],
-      baseName: row["base_name"],
-      originalName: row["orig_name"],
-      ownerId: row["owner_id"],
+      ts: row["ts"] as string,
+      baseName: row["base_name"] as string,
+      originalName: row["orig_name"] as string,
+      ownerId: strVal(row["owner_id"]),
       externalRef,
-      variants: await fetchVariantsOf(cx, id, row["base_name"], row["orig_name"])
+      variants: await fetchVariantsOf(cx, id, row["base_name"] as string, row["orig_name"] as string)
     })
   }
   return result
@@ -50,7 +51,7 @@ function sqlSelectMedia() {
 }
 
 async function fetchVariantsOf(cx: MediaStorageContext, mediaId: string, baseName?: string, originalName?: string): Promise<Variants> {
-  let rows = await cx.cn.allSqlBricks(
+  let rows = await cx.cn.all(
     sqlSelectVariant()
       .where("v.media_id", mediaId)
   )
@@ -58,7 +59,7 @@ async function fetchVariantsOf(cx: MediaStorageContext, mediaId: string, baseNam
     throw new Error(`Missing variants for media ${mediaId}`)
   let result: Variants = {}
   for (let row of rows) {
-    let code = row["code"]
+    let code = row["code"] as string
     result[code] = toVariant(row, baseName, originalName)
   }
   return result
@@ -70,7 +71,7 @@ function sqlSelectVariant() {
     .leftJoin("variant_img i").using("variant_id")
 }
 
-function toVariant(row: any[], baseName?: string, originalName?: string): Variant {
+function toVariant(row: object, baseName?: string, originalName?: string): Variant {
   let id = row["variant_id"].toString()
   let fileName = getFileName({
     imType: row["im_type"],

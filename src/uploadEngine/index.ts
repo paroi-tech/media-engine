@@ -1,7 +1,7 @@
-import { declareRoutes } from "./declareRoutes"
-import { UploadEngineContext } from "./internal-definitions"
-import { UploadEngineConfiguration, UploadEngine, DeclareRoutesMultiEngineOptions, GetUploadEngine } from "./exported-definitions"
 import { Media, Variant } from "../mediaStorage"
+import { declareRoutes } from "./declareRoutes"
+import { DeclareRoutesMultiEngineOptions, GetUploadEngine, UploadEngine, UploadEngineConfiguration } from "./exported-definitions"
+import { UploadEngineContext } from "./internal-definitions"
 
 let contexts = new WeakMap<UploadEngine, UploadEngineContext>()
 

@@ -1,7 +1,8 @@
 import { basename } from "path"
 import { select } from "sql-bricks"
-import { MediaStorageContext } from "./internal-definitions"
 import { ExternalRef } from "./exported-definitions"
+import { MediaStorageContext } from "./internal-definitions"
+import { strVal } from "./utils"
 
 /**
  * @returns the file base name without the extension
@@ -16,7 +17,7 @@ export function fileBaseName(path: string): string {
  * @returns the list of media identifiers attached to the `externalRef`. Can be empty.
  */
 export async function findMediaByExternalRef(cx: MediaStorageContext, externalRef: ExternalRef): Promise<string[]> {
-  let rows = await cx.cn.allSqlBricks(
+  let rows = await cx.cn.all(
     select("media_id")
       .from("media_ref")
       .where({
@@ -24,7 +25,7 @@ export async function findMediaByExternalRef(cx: MediaStorageContext, externalRe
         "external_id": externalRef.id
       })
   )
-  return rows.map(row => row.media_id)
+  return rows.map(row => strVal(row.media_id))
 }
 
 export interface FileNameOptions {

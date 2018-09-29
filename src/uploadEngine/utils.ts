@@ -8,7 +8,6 @@ export function writeJsonResponse(res: Response, httpCode: number, data) {
 }
 
 export function writeServerError(res: Response, err: Error, reqBody?: string) {
-  console.log("[ERR]", err, err.stack, reqBody)
   writeError(res, 500, `Error: ${err.message}\nRequest: ${reqBody}`)
 }
 
