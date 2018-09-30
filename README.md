@@ -7,7 +7,7 @@ A backend library to upload and store files in SQLite, then to serve them.
 The `MediaStorage` stores the files in a relational database. It resizes images in the configured dimensions.
 
 ```ts
-export async function createStorage(cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
+export async function createStorage(cn: import("@ladc/sql-bricks-qb").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
   return await createMediaStorage({
     execInitScript: execDdl ? "sqlite" : undefined,
     cn,

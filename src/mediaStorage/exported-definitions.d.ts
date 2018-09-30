@@ -2,7 +2,7 @@ export type DbEngine = "sqlite"
 
 export interface MediaStorageOptions {
   execInitScript?: DbEngine
-  cn: import("mycn-with-sql-bricks").DatabaseConnectionWithSqlBricks
+  cn: import("@ladc/sql-bricks-qb").DatabaseConnectionWithSqlBricks
   imagesConf?: ImageVariantsConfiguration
   logWarning?: (message: string) => void
 }
