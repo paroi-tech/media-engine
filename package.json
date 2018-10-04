@@ -1,6 +1,6 @@
 {
   "name": "@fabtom/media-engine",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "A backend library to upload and store files in SQLite, then to serve them",
   "main": "storage.js",
   "types": "storage.d.ts",
@@ -11,15 +11,15 @@
     "sql-bricks": "^2.0.3"
   },
   "peerDependencies": {
-    "ladc": "^0.16.1",
-    "@ladc/sql-bricks-qb": "^0.14.1"
+    "ladc": "^0.19",
+    "@ladc/sql-bricks-modifier": "^0.19"
   },
   "devDependencies": {
-    "@ladc/sql-bricks-qb": "^0.14.1",
+    "@ladc/sql-bricks-modifier": "^0.19",
     "@types/express": "^4.16.0",
     "@types/sharp": "^0.17.10",
     "@types/sql-bricks": "^2.0.1",
-    "ladc": "^0.16.1",
+    "ladc": "^0.19",
     "npm-run-all": "^4.1.3",
     "rimraf": "^2.6.2",
     "rollup": "^0.66.2",

@@ -6,15 +6,15 @@ A backend library to upload and store files in SQLite, then to serve them.
 
 The `MediaStorage` stores the files in a relational database. It resizes images in the configured dimensions.
 
-Open a connection with [LADC](https://www.npmjs.com/package/ladc) using the [adapter for SQLite](https://www.npmjs.com/package/@ladc/sqlite3-adapter) and the [integration](https://www.npmjs.com/package/@ladc/sql-bricks-qb) with the query builder SQL Bricks:
+Open a connection with [LADC](https://www.npmjs.com/package/ladc) using the [adapter for SQLite](https://www.npmjs.com/package/@ladc/sqlite3-adapter) and the [integration](https://www.npmjs.com/package/@ladc/sql-bricks-modifier) with the query builder SQL Bricks:
 
 ```sh
-npm install @fabtom/media-engine ladc @ladc/sqlite3-adapter @ladc/sql-bricks-qb
+npm install @fabtom/media-engine ladc @ladc/sqlite3-adapter @ladc/sql-bricks-modifier
 ```
 
 ```ts
 import { sqlite3ConnectionProvider } from "@ladc/sqlite3-adapter"
-import { createDatabaseConnectionWithSqlBricks } from "@ladc/sql-bricks-qb"
+import { createDatabaseConnectionWithSqlBricks } from "@ladc/sql-bricks-modifier"
 
 let cn = createDatabaseConnectionWithSqlBricks({
     provider: sqlite3ConnectionProvider({ fileName: "path/to/db.sqlite" })
@@ -27,7 +27,7 @@ let cn = createDatabaseConnectionWithSqlBricks({
 Then, create the storage:
 
 ```ts
-export async function createStorage(cn: import("@ladc/sql-bricks-qb").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
+export async function createStorage(cn: import("@ladc/sql-bricks-modifier").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
   return await createMediaStorage({
     execInitScript: execDdl ? "sqlite" : undefined,
     cn,
