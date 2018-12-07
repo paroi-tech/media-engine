@@ -19,9 +19,7 @@ import sqlBricksModifier from "@ladc/sql-bricks-modifier"
 
 let cn = ladc({
   adapter: sqlite3Adapter({ fileName: "path/to/db.sqlite" }),
-  modifier: sqlBricksModifier({
-    toParamsOptions: { placeholder: "?%d" } // SQLite requires parameter placeholders with '?'
-  })
+  modifier: sqlBricksModifier()
 }
 ```
 
