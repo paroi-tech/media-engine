@@ -13,12 +13,13 @@ npm install @fabtom/media-engine ladc @ladc/sqlite3-adapter @ladc/sql-bricks-mod
 ```
 
 ```ts
-import { sqlite3ConnectionProvider } from "@ladc/sqlite3-adapter"
-import { createDatabaseConnectionWithSqlBricks } from "@ladc/sql-bricks-modifier"
+import ladc from "ladc"
+import sqlite3Adapter from "@ladc/sqlite3-adapter"
+import sqlBricksModifier from "@ladc/sql-bricks-modifier"
 
-let cn = createDatabaseConnectionWithSqlBricks({
-    provider: sqlite3ConnectionProvider({ fileName: "path/to/db.sqlite" })
-  }, {
+let cn = ladc({
+  adapter: sqlite3Adapter({ fileName: "path/to/db.sqlite" }),
+  modifier: sqlBricksModifier({
     toParamsOptions: { placeholder: "?%d" } // SQLite requires parameter placeholders with '?'
   })
 }
@@ -27,7 +28,7 @@ let cn = createDatabaseConnectionWithSqlBricks({
 Then, create the storage:
 
 ```ts
-export async function createStorage(cn: import("@ladc/sql-bricks-modifier").DatabaseConnectionWithSqlBricks, execDdl: boolean) {
+export async function createStorage(cn: import("@ladc/sql-bricks-modifier").SBMainConnection, execDdl: boolean) {
   return await createMediaStorage({
     execInitScript: execDdl ? "sqlite" : undefined,
     cn,

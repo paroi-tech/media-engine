@@ -3,7 +3,7 @@ const sharp = require("sharp")
 import { fileBaseName, findMediaByExternalRef } from "./common"
 import { ImageMeta, ImageVariantConfiguration, MediaDef, MulterFile, NewMedia, StoreMediaParameters, VariantDef } from "./exported-definitions"
 import { isSupportedImage } from "./exported-utils"
-import { MediaStorageContext, SharpInstance, SharpOutputInfo } from "./internal-definitions"
+import { MediaStorageContext, Sharp, SharpOutputInfo } from "./internal-definitions"
 
 const SHARP_OUTPUT_TYPES = ["image/png", "image/jpeg", "image/webp"]
 
@@ -151,7 +151,7 @@ async function getImageMeta(cx: MediaStorageContext, f: MulterFile): Promise<Ima
 }
 
 async function resizeAndInsertVariant(cx: MediaStorageContext, mediaId: string, targetConf: ImageVariantConfiguration, f: MulterFile, fImgMeta: ImageMeta) {
-  let sharpInst: SharpInstance | undefined
+  let sharpInst: Sharp | undefined
   let sharpResult: {
     data: Buffer
     info: SharpOutputInfo
@@ -192,7 +192,7 @@ interface CropImageSize {
   height: number
 }
 
-function resizeCropImage(targetConf: CropImageSize, f: MulterFile, fImgMeta: ImageMeta): SharpInstance | undefined {
+function resizeCropImage(targetConf: CropImageSize, f: MulterFile, fImgMeta: ImageMeta): Sharp | undefined {
   let targetW = targetConf.width
   let targetH = targetConf.height
   let sourceW = fImgMeta.width
@@ -202,7 +202,7 @@ function resizeCropImage(targetConf: CropImageSize, f: MulterFile, fImgMeta: Ima
   return sharp(f.buffer).resize(targetW, targetH)
 }
 
-function resizeEmbedImage(targetConf: ImageVariantConfiguration, f: MulterFile, fImgMeta: ImageMeta): SharpInstance | undefined {
+function resizeEmbedImage(targetConf: ImageVariantConfiguration, f: MulterFile, fImgMeta: ImageMeta): Sharp | undefined {
   let targetW = targetConf.width
   let targetH = targetConf.height
   let sourceW = fImgMeta.width
