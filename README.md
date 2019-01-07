@@ -88,7 +88,7 @@ function createUploadEngineManager(storage: MediaStorage): UploadEngineManager {
       // TODO: Implement
       return {
         canUpload: true,
-        ownerId: 123
+        ownerId: "123"
       }
     },
 
