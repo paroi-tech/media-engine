@@ -32,7 +32,7 @@ create table variant (
   media_id bigint not null references media(media_id),
   code varchar(255) not null, -- examples: 'orig', '800x600', '80x80'
   weight_b integer not null,
-  im_type varchar(255) not null,
+  media_type varchar(255) not null,
   bin_data blob not null,
   unique (media_id, code)
 );

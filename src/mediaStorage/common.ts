@@ -29,14 +29,14 @@ export async function findMediaByExternalRef(cx: MediaStorageContext, externalRe
 }
 
 export interface FileNameOptions {
-  imType: string
+  mediaType: string
   code?: string
   baseName?: string
   originalName?: string
 }
 
 export function getFileName(options: FileNameOptions) {
-  let fileExt = toFileExtension(options.imType, options.originalName) || ""
+  let fileExt = toFileExtension(options.mediaType, options.originalName) || ""
   let n = [options.baseName, options.code].filter(tok => tok !== undefined).join("-")
   if (!n)
     n = options.originalName || "unamed"
@@ -46,13 +46,13 @@ export function getFileName(options: FileNameOptions) {
 /**
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
  */
-function toFileExtension(imType: string, originalName?: string): string | undefined {
-  let [type, subType] = imType.split("/")
+function toFileExtension(mediaType: string, originalName?: string): string | undefined {
+  let [type, subType] = mediaType.split("/")
   if (subType.length >= 2 && subType.length <= 4)
     return `.${subType}`
-  if (imType === "text/plain")
+  if (mediaType === "text/plain")
     return ".txt"
-  if (imType === "text/javascript")
+  if (mediaType === "text/javascript")
     return ".js"
   if (originalName) {
     let dotIndex = originalName.lastIndexOf(".")

@@ -84,7 +84,7 @@ function makeGetRouteHandler(getCx: GetCx) {
 async function returnFile(cx: UploadEngineContext, variantId: string, res: Response, asDownload = false) {
   let fileData = await cx.storage.getFileData(variantId)
   if (fileData) {
-    res.type(fileData.imType)
+    res.type(fileData.mediaType)
     res.set("Content-Length", fileData.weightB.toString())
     if (asDownload)
       res.set("Content-Disposition", `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(fileData.fileName)}`)

@@ -66,7 +66,7 @@ async function fetchVariantsOf(cx: MediaStorageContext, mediaId: string, baseNam
 }
 
 function sqlSelectVariant() {
-  return select("v.variant_id, v.weight_b, v.im_type, v.code, i.width, i.height, i.dpi")
+  return select("v.variant_id, v.weight_b, v.media_type, v.code, i.width, i.height, i.dpi")
     .from("variant v")
     .leftJoin("variant_img i").using("variant_id")
 }
@@ -74,7 +74,7 @@ function sqlSelectVariant() {
 function toVariant(row: object, baseName?: string, originalName?: string): Variant {
   let id = row["variant_id"].toString()
   let fileName = getFileName({
-    imType: row["im_type"],
+    mediaType: row["media_type"],
     code: row["code"],
     originalName,
     baseName
@@ -87,7 +87,7 @@ function toVariant(row: object, baseName?: string, originalName?: string): Varia
   return {
     id,
     weightB: row["weight_b"],
-    imType: row["im_type"],
+    mediaType: row["media_type"],
     code: row["code"],
     fileName,
     img

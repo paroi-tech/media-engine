@@ -6,7 +6,7 @@ import { strVal } from "./utils"
 
 export async function getFileData(cx: MediaStorageContext, variantId: string): Promise<VariantData | undefined> {
   let row = await cx.cn.singleRow(
-    select("v.bin_data, v.weight_b, v.im_type, v.code, m.media_id, m.ts, m.orig_name, m.base_name")
+    select("v.bin_data, v.weight_b, v.media_type, v.code, m.media_id, m.ts, m.orig_name, m.base_name")
       .from("variant v")
       .innerJoin("media m").using("media_id")
       .where("v.variant_id", variantId)
@@ -14,7 +14,7 @@ export async function getFileData(cx: MediaStorageContext, variantId: string): P
   if (!row)
     return
   let fileName = getFileName({
-    imType: row["im_type"] as string,
+    mediaType: row["media_type"] as string,
     code: row["code"] as string,
     originalName: row["orig_name"] as string,
     baseName: row["base_name"] as string
@@ -22,7 +22,7 @@ export async function getFileData(cx: MediaStorageContext, variantId: string): P
   return {
     id: variantId,
     weightB: row["weight_b"] as number,
-    imType: row["im_type"] as string,
+    mediaType: row["media_type"] as string,
     media: {
       id: strVal(row["media_id"]),
       ts: row["ts"] as string

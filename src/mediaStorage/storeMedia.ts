@@ -46,7 +46,7 @@ export async function storeMedia(cx: MediaStorageContext, params: StoreMediaPara
       mediaId,
       code: "orig",
       weightB: params.file.size,
-      imType: params.file.mimetype,
+      mediaType: params.file.mimetype,
       img: imgMeta,
       binData: params.file.buffer
     })
@@ -106,7 +106,7 @@ async function updateMedia(cx: MediaStorageContext, media: UpdateMedia, mediaId:
   )
 }
 
-type InsertVariant = Pick<VariantDef, "code" | "imType" | "weightB" | "img" | "binData"> & {
+type InsertVariant = Pick<VariantDef, "code" | "mediaType" | "weightB" | "img" | "binData"> & {
   "mediaId": string
 }
 
@@ -115,7 +115,7 @@ async function insertVariant(cx: MediaStorageContext, variant: InsertVariant): P
     insertInto("variant").values({
       "media_id": variant.mediaId,
       "weight_b": variant.weightB,
-      "im_type": variant.imType,
+      "media_type": variant.mediaType,
       "code": variant.code,
       "bin_data": variant.binData
     })
@@ -156,7 +156,7 @@ async function resizeAndInsertVariant(cx: MediaStorageContext, mediaId: string, 
     data: Buffer
     info: SharpOutputInfo
   }
-  let imType = outputImageMimeType(f.mimetype, targetConf.imType)
+  let mediaType = outputImageMimeType(f.mimetype, targetConf.mediaType)
   try {
     if (targetConf.embed || targetConf.width === undefined || targetConf.height === undefined)
       sharpInst = await resizeEmbedImage(targetConf, f, fImgMeta)
@@ -165,7 +165,7 @@ async function resizeAndInsertVariant(cx: MediaStorageContext, mediaId: string, 
     if (!sharpInst)
       return
     sharpResult = await ((sharpInst
-      .toFormat(toOutputSharpFormat(imType)) as any)
+      .toFormat(toOutputSharpFormat(mediaType)) as any)
       .toBuffer({
         resolveWithObject: true
       }))
@@ -178,7 +178,7 @@ async function resizeAndInsertVariant(cx: MediaStorageContext, mediaId: string, 
     mediaId,
     code: targetConf.code,
     weightB: sharpResult.info.size,
-    imType,
+    mediaType,
     img: {
       width: sharpResult.info.width,
       height: sharpResult.info.height,
@@ -230,8 +230,8 @@ function resizeEmbedImage(targetConf: ImageVariantConfiguration, f: MulterFile, 
     return sharp(f.buffer).resize(undefined, targetH)
 }
 
-function toOutputSharpFormat(imType: string): string {
-  switch (imType) {
+function toOutputSharpFormat(mediaType: string): string {
+  switch (mediaType) {
     case "image/png":
       return "png"
     case "image/jpeg":
@@ -239,13 +239,13 @@ function toOutputSharpFormat(imType: string): string {
     case "image/webp":
       return "webp"
     default:
-      throw new Error(`Invalid output image format: ${imType}`)
+      throw new Error(`Invalid output image format: ${mediaType}`)
   }
 }
 
-function outputImageMimeType(origMimeType: string | undefined, queriedImType?: string) {
-  if (queriedImType && SHARP_OUTPUT_TYPES.includes(queriedImType))
-    return queriedImType
+function outputImageMimeType(origMimeType: string | undefined, queriedMediaType?: string) {
+  if (queriedMediaType && SHARP_OUTPUT_TYPES.includes(queriedMediaType))
+    return queriedMediaType
   if (origMimeType && SHARP_OUTPUT_TYPES.includes(origMimeType))
     return origMimeType
   return "image/webp"

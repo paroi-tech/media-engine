@@ -33,7 +33,7 @@ interface VariantDef {
   id: string
   media: MediaDef
   code: string
-  imType: string
+  mediaType: string
   weightB: number
   img?: ImageMeta
   binData: Buffer
@@ -74,7 +74,7 @@ export interface ImageVariantConfiguration {
    * The default value is `false` (crop).
    */
   embed?: boolean
-  imType?: string
+  mediaType?: string
 }
 
 export interface ImageVariantsConfiguration {
@@ -108,7 +108,7 @@ export interface MediaFilter {
 
 export type VDMedia = Pick<MediaDef, "id" | "ts">
 
-export type VariantData = Pick<VariantDef, "id" | "binData" | "weightB" | "imType"> & {
+export type VariantData = Pick<VariantDef, "id" | "binData" | "weightB" | "mediaType"> & {
   media: VDMedia
   fileName: string
 }
@@ -125,7 +125,7 @@ export interface Variants {
   [code: string]: Variant
 }
 
-export type Variant = Pick<VariantDef, "id" | "code" | "imType" | "weightB" | "img"> & {
+export type Variant = Pick<VariantDef, "id" | "code" | "mediaType" | "weightB" | "img"> & {
   fileName: string
 }
 

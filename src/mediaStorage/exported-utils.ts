@@ -1,5 +1,5 @@
 import { IMG_TYPES } from "./utils"
 
-export function isSupportedImage(imType: string) {
-  return IMG_TYPES.includes(imType)
+export function isSupportedImage(mediaType: string) {
+  return IMG_TYPES.includes(mediaType)
 }
