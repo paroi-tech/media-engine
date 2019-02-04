@@ -33,13 +33,16 @@ async function buildJs(srcDir, outputFile) {
   let bundle = await rollup.rollup({
     input: srcDir
   })
-  let { code } = await bundle.generate({
+  let { output } = await bundle.generate({
     format: "cjs",
     sourcemap: false,
     output: {
       exports: "named"
     }
   })
+  if (output.length !== 1)
+    throw new Error(`Only one output file from Rollup is expected (${output.length})`)
+  let { code } = output[0]
   let minified = uglifyEs.minify(code)
   if (minified.error)
     throw minified.error
