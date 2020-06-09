@@ -34,11 +34,9 @@ async function buildJs(srcDir, outputFile) {
     input: srcDir
   })
   let { output } = await bundle.generate({
-    format: "cjs",
+    format: "commonjs",
+    exports: "named",
     sourcemap: false,
-    output: {
-      exports: "named"
-    }
   })
   if (output.length !== 1)
     throw new Error(`Only one output file from Rollup is expected (${output.length})`)

@@ -1,6 +1,6 @@
 {
   "name": "@paroi/media-engine",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A backend library to upload and store files in SQLite, then to serve them",
   "main": "storage.js",
   "types": "storage.d.ts",
