@@ -38,4 +38,4 @@ export function declareRoutesMultiEngine(router: import("express").Router, optio
   })
 }
 
-export * from "./exported-definitions"
+export { CanUpload, DeclareRoutesMultiEngineOptions, DeclareRoutesOptions, GetUploadEngine, UploadEngine, UploadEngineConfiguration, UploadEngineManager } from "./exported-definitions"

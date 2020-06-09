@@ -1,4 +1,4 @@
-# @tomko/media-engine
+# @paroi/media-engine
 
 A backend library to upload and store files in SQLite, then to serve them.
 
@@ -9,7 +9,7 @@ The `MediaStorage` stores the files in a relational database. It resizes images 
 Open a connection with [LADC](https://www.npmjs.com/package/ladc) using the [adapter for SQLite](https://www.npmjs.com/package/@ladc/sqlite3-adapter) and the [integration](https://www.npmjs.com/package/@ladc/sql-bricks-modifier) with the query builder SQL Bricks:
 
 ```sh
-npm install @tomko/media-engine ladc @ladc/sqlite3-adapter @ladc/sql-bricks-modifier
+npm install @paroi/media-engine ladc @ladc/sqlite3-adapter @ladc/sql-bricks-modifier
 ```
 
 ```ts
@@ -34,7 +34,7 @@ export async function createStorage(cn: import("@ladc/sql-bricks-modifier").SBMa
   })
 }
 
-const IMAGES_CONF: import("@tomko/media-engine").ImageVariantsConfiguration = {
+const IMAGES_CONF: import("@paroi/media-engine").ImageVariantsConfiguration = {
   "imageType1": [
     {
       code: "34x34",
@@ -71,8 +71,8 @@ Here is how to create an `UploadEngine`:
 
 ```ts
 import { Request } from "express"
-import { ExternalRef, MediaRef, Media, MulterFile, MediaStorage, createMediaStorage, isSupportedImage } from "@tomko/media-engine"
-import { createUploadEngine, UploadEngine, UploadEngineManager } from "@tomko/media-engine/upload"
+import { ExternalRef, MediaRef, Media, MulterFile, MediaStorage, createMediaStorage, isSupportedImage } from "@paroi/media-engine"
+import { createUploadEngine, UploadEngine, UploadEngineManager } from "@paroi/media-engine/upload"
 
 export async function createUpload(storage: MediaStorage) {
   return createUploadEngine({

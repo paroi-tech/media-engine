@@ -29,4 +29,4 @@ export async function createMediaStorage(options: MediaStorageOptions): Promise<
 }
 
 export * from "./exported-utils"
-export * from "./exported-definitions"
+export type { DbEngine, ExternalRef, ImageMeta, ImageVariantConfiguration, ImageVariantsConfiguration, Media, MediaDef, MediaFilter, MediaOrVariantId, MediaQuery, MediaRef, MediaStorage, MediaStorageOptions, MulterFile, NewMedia, StoreMediaParameters, VDMedia, Variant, VariantData, VariantDef, Variants } from "./exported-definitions"
