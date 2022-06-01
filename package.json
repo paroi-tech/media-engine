@@ -7,7 +7,7 @@
   "dependencies": {
     "@types/multer": "^1.4.3",
     "multer": "^1.4.2",
-    "sharp": "^0.25.3",
+    "sharp": "^0.30.5",
     "sql-bricks": "^2.0.5"
   },
   "peerDependencies": {
